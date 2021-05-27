@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -44,5 +43,18 @@ public class HomeController {
         String rawPassword = user.getPassword();
         userService.registerUser(username, rawPassword);
         return "redirect:loginform";
+    }
+
+    @GetMapping("/editData")
+    public String edit(Model model) {
+        User currentUser = userService.findCurrentUser();
+        model.addAttribute("currentUser", currentUser);
+        return "editData";
+    }
+
+    @PostMapping("/editData")
+    public String edit(User user) {
+        userService.saveUser(user);
+        return "redirect:/";
     }
 }
