@@ -1,19 +1,12 @@
 package com.kj.springsecurity.user;
 
-import com.kj.springsecurity.user.Role;
-import com.kj.springsecurity.user.User;
-import com.kj.springsecurity.user.UserRepository;
-import com.kj.springsecurity.user.UserRole;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +41,7 @@ public class UserService {
     }
 
     public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -55,10 +49,58 @@ public class UserService {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         String userName = currentUser.getName();
         Optional<User> optionalUser = userRepository.findByUsername(userName);
-        if (optionalUser.isPresent()){
-            return optionalUser.get();
-        }
-        throw new UsernameNotFoundException("Username " + userName + " not found");
+        return optionalUser.orElseGet(null);
     }
 
+    public List<User> findAllWithoutCurrentUser() {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> !user.getUsername().equals(currentUser.getName()))
+                .collect(Collectors.toList());
+    }
+
+    public void removeAdmin(Long id) {
+        User user = userRepository.findById(id).get();
+        Set<UserRole> roles = user.getRoles();
+        Optional<UserRole> adminRole = roles.stream()
+                .filter(role -> Role.ROLE_ADMIN.equals(role.getRole()))
+                .findFirst();
+
+        if (adminRole.isPresent()){
+            roles.remove(adminRole);
+        }
+        user.setRoles(roles);
+        userRepository.save(user);
+    }
+
+    public List<User> findAllAdmins() {
+        List<User> admins = new ArrayList<>();
+        List<User> all = userRepository.findAll();
+        for (User user : all) {
+            for (UserRole role : user.getRoles()) {
+                if (role.getRole().equals(Role.ROLE_ADMIN)) {
+                    admins.add(user);
+                }
+            }
+        }
+        return admins;
+    }
+
+    public List<User> findAllUsers() {
+        List<User> all = userRepository.findAll();
+        List<User> allUsers = new ArrayList<>();
+
+        for (User user : all) {
+            if (user.getRoles().size() == 1) {
+                for (UserRole role : user.getRoles()) {
+                    if (!role.getRole().equals(Role.ROLE_ADMIN)) {
+                        allUsers.add(user);
+                    }
+                }
+            }
+        }
+        return allUsers;
+    }
 }

@@ -8,6 +8,7 @@
 <h1>Edytuj użytkownika</h1>
 
 <form th:action="@{/editData}" method="post" th:object="${currentUser}">
+    <input type="hidden" th:field="*{id}">
     <input type="text" th:field="*{username}">
     <input type="password" th:field="*{password}">
     <button type="submit">Edytuj</button>

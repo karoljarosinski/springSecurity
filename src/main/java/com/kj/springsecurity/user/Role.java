@@ -1,7 +1,7 @@
 package com.kj.springsecurity.user;
 
 public enum Role {
-    ROLE_USER ("użytkownik"),
+    ROLE_USER ("uzytkownik"),
     ROLE_ADMIN ("admin");
 
     private String description;
@@ -17,4 +17,6 @@ public enum Role {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }
