@@ -49,4 +49,10 @@ public class AdminController {
         userService.removeAdmin(id);
         return "redirect:/admin";
     }
+
+    @PostMapping("/addAdmin/{id}")
+    public String addAdmin(@PathVariable Long id){
+        userService.addAdmin(id);
+        return "redirect:/admin";
+    }
 }

@@ -69,19 +69,22 @@ public class UserService {
                 .findFirst();
 
         if (adminRole.isPresent()){
-            roles.remove(adminRole);
+            roles.remove(adminRole.get());
         }
         user.setRoles(roles);
         userRepository.save(user);
     }
 
     public List<User> findAllAdmins() {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         List<User> admins = new ArrayList<>();
         List<User> all = userRepository.findAll();
         for (User user : all) {
-            for (UserRole role : user.getRoles()) {
-                if (role.getRole().equals(Role.ROLE_ADMIN)) {
-                    admins.add(user);
+            if (!user.getUsername().equals(currentUser.getName())) {
+                for (UserRole role : user.getRoles()) {
+                    if (role.getRole().equals(Role.ROLE_ADMIN)) {
+                        admins.add(user);
+                    }
                 }
             }
         }
@@ -102,5 +105,13 @@ public class UserService {
             }
         }
         return allUsers;
+    }
+
+    public void addAdmin(Long id) {
+        User user = userRepository.findById(id).get();
+        Set<UserRole> userRoles = user.getRoles();
+        userRoles.add(new UserRole(user, Role.ROLE_ADMIN));
+        user.setRoles(userRoles);
+        userRepository.save(user);
     }
 }

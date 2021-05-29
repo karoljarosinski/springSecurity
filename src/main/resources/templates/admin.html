@@ -13,14 +13,14 @@
     <li th:each="user: ${users}">
         <span th:text="${user.username}"></span>
         <span>    </span>
-<!--        <span th:each="a: ${user.roles}">-->
-<!--            <span>         </span>-->
-<!--&lt;!&ndash;            <span th:text="${a.role.description}"></span>&ndash;&gt;-->
-<!--            <span>       </span>-->
-<!--             <form th:action="|/admin/removeAdmin/${user.id}|" method="post" th:if="${a.role.description == 'admin'}" th:object="${user}">-->
-<!--                <button type="submit">Usuń admina</button>-->
-<!--             </form>-->
-<!--        </span>-->
+        <span th:each="a: ${user.roles}">
+            <span>         </span>
+<!--            <span th:text="${a.role.description}"></span>-->
+            <span>       </span>
+             <form th:action="|/admin/addAdmin/${user.id}|" method="post" th:object="${user}">
+                <button type="submit">Dodaj admina</button>
+             </form>
+        </span>
         <a th:href="|/admin/editUser/${user.id}|">Edytuj użytkownika</a>
     </li>
 </ul>
@@ -31,7 +31,7 @@
         <span  th:text = "${admin.username}"></span>
          <span th:each="b: ${admin.roles}">
             <span>         </span>
-                         <span th:text="${b.role.description}"></span>
+<!--                         <span th:text="${b.role.description}"></span>-->
             <span>       </span>
              <form th:action="|/admin/removeAdmin/${admin.id}|" method="post" th:if="${b.role.description == 'admin'}" th:object="${admin}">
                 <button type="submit">Usuń admina</button>
