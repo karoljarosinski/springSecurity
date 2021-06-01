@@ -71,7 +71,6 @@ public class UserService {
         if (adminRole.isPresent()){
             roles.remove(adminRole.get());
         }
-        user.setRoles(roles);
         userRepository.save(user);
     }
 
@@ -111,7 +110,6 @@ public class UserService {
         User user = userRepository.findById(id).get();
         Set<UserRole> userRoles = user.getRoles();
         userRoles.add(new UserRole(user, Role.ROLE_ADMIN));
-        user.setRoles(userRoles);
         userRepository.save(user);
     }
 }

@@ -1,15 +1,14 @@
 package com.kj.springsecurity.admin;
 
-import com.kj.springsecurity.user.Role;
+
 import com.kj.springsecurity.user.User;
-import com.kj.springsecurity.user.UserRole;
 import com.kj.springsecurity.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
+
 
 @RequestMapping("/admin")
 @Controller
@@ -24,7 +23,6 @@ public class AdminController {
     @GetMapping("")
     public String adminPanel(Model model) {
         List<User> userList = userService.findAllUsers();
-//        List<User> userList = userService.findAllWithoutCurrentUser();
         model.addAttribute("users", userList);
         List<User> admins = userService.findAllAdmins();
         model.addAttribute("admins", admins);
@@ -40,7 +38,10 @@ public class AdminController {
 
     @PostMapping("/editUser/{id}")
     public String editUser(@PathVariable Long id, User user) {
-        userService.saveUser(user);
+        User user1 = userService.findById(id);
+        user1.setUsername(user.getUsername());
+        user1.setPassword(user.getPassword());
+        userService.saveUser(user1);
         return "redirect:/admin";
     }
 

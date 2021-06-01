@@ -31,7 +31,6 @@
         <span  th:text = "${admin.username}"></span>
          <span th:each="b: ${admin.roles}">
             <span>         </span>
-<!--                         <span th:text="${b.role.description}"></span>-->
             <span>       </span>
              <form th:action="|/admin/removeAdmin/${admin.id}|" method="post" th:if="${b.role.description == 'admin'}" th:object="${admin}">
                 <button type="submit">Usuń admina</button>

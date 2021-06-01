@@ -1,7 +1,6 @@
 package com.kj.springsecurity.user;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,8 +14,8 @@ public class User {
 
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
-    private Set<UserRole> roles = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private Set<UserRole> roles;
 
     public Long getId() {
         return id;
@@ -47,6 +46,6 @@ public class User {
     }
 
     public void setRoles(Set<UserRole> roles) {
-        this.roles.addAll(roles);
+        this.roles = roles;
     }
 }
