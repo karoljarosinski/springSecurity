@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel admina</title>
+</head>
+<body>
+<h1>Panel admina</h1>
+
+<h2>Lista wszystkich użytkowników</h2>
+
+<ul>
+    <li th:each="user: ${users}">
+        <span th:text="${user.username}"></span>
+        <span>    </span>
+        <span th:each="a: ${user.roles}">
+            <span>         </span>
+<!--            <span th:text="${a.role.description}"></span>-->
+            <span>       </span>
+             <form th:action="|/admin/addAdmin/${user.id}|" method="post" th:object="${user}">
+                <button type="submit">Dodaj admina</button>
+             </form>
+        </span>
+        <a th:href="|/admin/editUser/${user.id}|">Edytuj użytkownika</a>
+    </li>
+</ul>
+
+<h2>Lista wszystkich adminów</h2>
+<ul>
+    <li th:each="admin: ${admins}">
+        <span  th:text = "${admin.username}"></span>
+         <span th:each="b: ${admin.roles}">
+            <span>         </span>
+            <span>       </span>
+             <form th:action="|/admin/removeAdmin/${admin.id}|" method="post" th:if="${b.role.description == 'admin'}" th:object="${admin}">
+                <button type="submit">Usuń admina</button>
+             </form>
+        </span>
+    </li>
+</ul>
+
+</body>
+</html>
